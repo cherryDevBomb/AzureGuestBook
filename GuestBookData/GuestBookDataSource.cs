@@ -9,6 +9,7 @@ namespace GuestBookData
 {
     // https://docs.microsoft.com/en-us/azure/cosmos-db/tutorial-develop-table-dotnet
     // https://docs.microsoft.com/en-us/azure/cosmos-db/create-table-dotnet
+    // https://technet2.github.io/Wiki/blogs/windowsazurestorage/windows-azure-storage-client-library-2-0-tables-deep-dive.html
     // ~ 1:50:30
     public class GuestBookDataSource
     {
