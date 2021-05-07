@@ -7,7 +7,7 @@ Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "GuestBookAzureCloudService"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GuestBookWorkerRole", "GuestBookWorkerRole\GuestBookWorkerRole.csproj", "{47F1EBED-3B7F-46B1-9D9F-8F6957B76650}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GuestBookData", "GuestBookData\GuestBookData.csproj", "{3F919C49-D744-48D7-A11D-1AA7EF327C2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GuestBookData", "GuestBookData\GuestBookData.csproj", "{3F919C49-D744-48D7-A11D-1AA7EF327C2A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GuestBookWebRole", "GuestBookWebRole\GuestBookWebRole.csproj", "{C1004CB1-854D-4163-9283-444332B9F98C}"
 EndProject

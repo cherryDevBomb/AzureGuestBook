@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GuestBookData;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -9,6 +10,8 @@ namespace GuestBookWebRole
 {
     public partial class _Default : Page
     {
+        private static GuestBookDataSource ds = new GuestBookDataSource();
+
         protected void Page_Load(object sender, EventArgs e)
         {
 
