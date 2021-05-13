@@ -36,65 +36,54 @@ namespace GuestBookWebRole
             }
         }
 
+        // https://github.com/Azure-Samples/azure-sdk-for-net-storage-blob-upload-download/blob/master/v12/Program.cs
         public void SignButton_Click(object sender, EventArgs e)
         {
-            if (this.FileUpload1.HasFile)
+            if (FileUpload1.HasFile)
             {
-                this.InitializeStorage();
-                //upload the image to blob storage
-                string uniqueBlobName = string.Format("guestbookpics/image_{0}{1}", Guid.NewGuid().ToString(), Path.GetExtension(this.FileUpload1.FileName));
+                InitializeStorage();
+                
                 string containerName = "guestbookpics-" + Guid.NewGuid();
+                string uniqueBlobName = string.Format("image_{0}{1}", Guid.NewGuid().ToString(), Path.GetExtension(FileUpload1.FileName));
 
-                //CloudBlockBlob blob = blobStorage.GetContainerReference("guestbookpics").GetBlockBlobReference(uniqueBlobName);
                 BlobContainerClient container = blobServiceClient.CreateBlobContainer(containerName);
+                BlobClient blob = container.GetBlobClient(uniqueBlobName);
 
-                blob.Properties.ContentType = this.FileUpload1.PostedFile.ContentType;
-                //   using (FileUpload1.PostedFile.InputStream)
-                // {
-                //   blob.UploadFromStream(FileUpload1.PostedFile.InputStream);
-                //}
-                // blob.UploadFromStream(this.FileUpload1.FileContent); //.PostedFile.InputStream);
-                //Stream stream = blockBlob.OpenRead();
+                using (var fileStream = FileUpload1.PostedFile.InputStream)
+                {
+                    blob.Upload(fileStream);
+                }
+                System.Diagnostics.Trace.TraceInformation("Upload image '{0}' to blob storage as '{1}'", FileUpload1.FileName, uniqueBlobName);
 
-
-                //blob.UploadFromByteArray(this.FileUpload1.FileBytes, 0, this.FileUpload1.FileBytes.Length);
-                blob.UploadFromStream(this.FileUpload1.PostedFile.InputStream);
-
-                System.Diagnostics.Trace.TraceInformation("Upload image '{0}' to blob storage as '{1}'", this.FileUpload1.FileName, uniqueBlobName);
-
-                //create a new entry in table storage
                 GuestBookEntry entry = new GuestBookEntry()
                 {
-                    GuestName = this.NameTextBox.Text,
-                    Message = this.MessageTextBox.Text,
+                    GuestName = NameTextBox.Text,
+                    Message = MessageTextBox.Text,
                     PhotoUrl = blob.Uri.ToString(),
                     ThumbnailUrl = blob.Uri.ToString()
                 };
-
-
                 ds.AddGuestBookEntry(entry);
                 System.Diagnostics.Trace.TraceInformation("Added entry {0}-{1} in table storage for guest '{2}'", entry.PartitionKey, entry.RowKey, entry.GuestName);
 
-
                 //queue a message to process the image
-                var queue = queueStorage.GetQueueReference("guestthumbs");
-                var message = new CloudQueueMessage(string.Format("{0},{1},{2}", blob.Uri.ToString(), entry.PartitionKey, entry.RowKey));
-                queue.AddMessage(message);
-                System.Diagnostics.Trace.TraceInformation("Queued message to process blob '{0}'", uniqueBlobName);
+                //var queue = queueStorage.GetQueueReference("guestthumbs");
+                //var message = new CloudQueueMessage(string.Format("{0},{1},{2}", blob.Uri.ToString(), entry.PartitionKey, entry.RowKey));
+                //queue.AddMessage(message);
+                //System.Diagnostics.Trace.TraceInformation("Queued message to process blob '{0}'", uniqueBlobName);
             }
 
-            this.NameTextBox.Text = "";
-            this.MessageTextBox.Text = "";
+            NameTextBox.Text = "";
+            MessageTextBox.Text = "";
 
-            this.DataList1.DataSource = ds.GetGuestBookEntries();
-            this.DataList1.DataBind();
+            DataList1.DataSource = ds.GetGuestBookEntries();
+            DataList1.DataBind();
         }
 
-        protected void Timer1_Tick(object sender, EventArgs e)
-        {
-            this.DataList1.DataSource = ds.GetGuestBookEntries();
-            this.DataList1.DataBind();
-        }
+        //protected void Timer1_Tick(object sender, EventArgs e)
+        //{
+        //    this.DataList1.DataSource = ds.GetGuestBookEntries();
+        //    this.DataList1.DataBind();
+        //}
 
         private void InitializeStorage()
         {
