@@ -1,39 +1,38 @@
 ﻿using Azure.Storage.Blobs;
-using Azure.Storage.Queues;
+using Azure.Storage.Blobs.Models;
 using GuestBookData;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace GuestBookWebRole
 {
     public partial class _Default : Page
     {
-        private static bool storageInitialized = false;
-        private static object gate = new object();
-        //private static BlobClient blobStorage;
-        private static BlobServiceClient blobServiceClient;
-        private static QueueClient queueStorage;
+        private readonly string containerName = "guestbookpicsblob" + Guid.NewGuid();
+
+        private static bool _isStorageInitialized = false;
+        private static object _lock = new object();
+
+        private static BlobContainerClient _blobContainerClient;
+
+        //private static QueueClient queueStorage;
 
         private static GuestBookDataSource ds = new GuestBookDataSource();
 
         protected override void OnInit(EventArgs e)
         {
-            this.DataList1.DataSource = ds.GetGuestBookEntries();
-            this.DataList1.DataBind();
+            DataList1.DataSource = ds.GetGuestBookEntries();
+            DataList1.DataBind();
         }
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!Page.IsPostBack)
-            {
-                this.Timer1.Enabled = true;
-            }
+            //if (!Page.IsPostBack)
+            //{
+            //    Timer1.Enabled = true;
+            //}
         }
 
         // https://github.com/Azure-Samples/azure-sdk-for-net-storage-blob-upload-download/blob/master/v12/Program.cs
@@ -43,11 +42,9 @@ namespace GuestBookWebRole
             {
                 InitializeStorage();
                 
-                string containerName = "guestbookpics-" + Guid.NewGuid();
                 string uniqueBlobName = string.Format("image_{0}{1}", Guid.NewGuid().ToString(), Path.GetExtension(FileUpload1.FileName));
 
-                BlobContainerClient container = blobServiceClient.CreateBlobContainer(containerName);
-                BlobClient blob = container.GetBlobClient(uniqueBlobName);
+                BlobClient blob = _blobContainerClient.GetBlobClient(uniqueBlobName);
 
                 using (var fileStream = FileUpload1.PostedFile.InputStream)
                 {
@@ -87,37 +84,34 @@ namespace GuestBookWebRole
 
         private void InitializeStorage()
         {
-            if (storageInitialized)
+            if (_isStorageInitialized)
             {
                 return;
             }
 
-            lock (gate)
+            lock (_lock)
             {
-                if (storageInitialized)
+                if (_isStorageInitialized)
                 {
                     return;
                 }
 
                 try
                 {
-                    //read account configuration settings
-                    var storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("DataConnectionString"));
-                    //create blob container for images
-                    blobStorage = storageAccount.CreateCloudBlobClient();
-                    CloudBlobContainer container = blobStorage.GetContainerReference("guestbookpics");
+                    // Read account configuration settings
+                    var storageConnectionString = AppSettings.LoadAppSettings().StorageConnectionString;
 
-                    container.CreateIfNotExists();
+                    // Create blob container for images
+                    _blobContainerClient = new BlobContainerClient(storageConnectionString, containerName);
+                    _blobContainerClient.CreateIfNotExists();
 
-                    //configure container for public access
-                    var permissions = container.GetPermissions();
-                    permissions.PublicAccess = BlobContainerPublicAccessType.Container;
-                    container.SetPermissions(permissions);
+                    // Configure container for public access
+                    _blobContainerClient.SetAccessPolicy(PublicAccessType.Blob);
 
-                    //create queue to communicate with worker role
-                    queueStorage = storageAccount.CreateCloudQueueClient();
-                    CloudQueue queue = queueStorage.GetQueueReference("guestthumbs");
-                    queue.CreateIfNotExists();
+                    // Create queue to communicate with worker role
+                    //queueStorage = storageAccount.CreateCloudQueueClient();
+                    //CloudQueue queue = queueStorage.GetQueueReference("guestthumbs");
+                    //queue.CreateIfNotExists();
                 }
                 catch (WebException)
                 {
@@ -126,7 +120,7 @@ namespace GuestBookWebRole
                         "If running locally, ensure that the Development Storage service is running.");
                 }
 
-                storageInitialized = true;
+                _isStorageInitialized = true;
             }
         }
     }

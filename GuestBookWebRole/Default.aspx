@@ -14,7 +14,7 @@
            <asp:ScriptManager ID="ScriptManager1" 
                runat="server">
            </asp:ScriptManager>
-            <asp:Timer runat="server" id="Timer1" interval="500000" ontick="Timer1_Tick" />
+            <%--<asp:Timer runat="server" id="Timer1" interval="500000" ontick="Timer1_Tick" />--%>
             <div class="general">
                 <div class="title">
                     <h1>
