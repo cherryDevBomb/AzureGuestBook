@@ -1,15 +1,16 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="GuestBookWebRole._Default" %>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transactional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhml">
-    <head runat="server">
-        <title>Guestbook</title>
-        <link href="main.css" rel="stylesheet" type="text/css" />
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guestbook</title>
+</head>
 
-    </head>
-    <body>
-        <form id="form1" runat="server">
+<body>
+    <form id="form1" runat="server">
            <asp:ScriptManager ID="ScriptManager1" 
                runat="server">
            </asp:ScriptManager>
@@ -114,6 +115,5 @@
       </asp:DataList>
           </div>
         </form>
-
-    </body>
+</body>
 </html>
