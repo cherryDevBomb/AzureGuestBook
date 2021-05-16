@@ -60,6 +60,29 @@ namespace GuestBookData
             return entities;
         }
 
+        public GuestBookEntry GetGuestBookEntryByPhotoURL(string photoUrl)
+        {
+
+            TableQuery<GuestBookEntry> query =
+                new TableQuery<GuestBookEntry>().Where(
+                    TableQuery.GenerateFilterCondition("PhotoUrl", QueryComparisons.Equal, photoUrl));
+            var entities = _table.ExecuteQuery(query);
+            var entity = entities.ElementAt(0);
+            return entity;
+        }
+
+        public void EditGuestBookEntryThumbUrl(string thumbnailUrl, string photoUrl)
+        {
+            TableQuery<GuestBookEntry> query =
+                new TableQuery<GuestBookEntry>().Where(
+                    TableQuery.GenerateFilterCondition("PhotoUrl", QueryComparisons.Equal, photoUrl));
+            var entities = _table.ExecuteQuery(query);
+            var entity = entities.ElementAt(0);
+            entity.ThumbnailUrl = thumbnailUrl;
+            TableOperation updateOperation = TableOperation.Merge(entity);
+            _table.Execute(updateOperation);
+        }
+
         public void AddGuestBookEntry(GuestBookEntry newItem)
         {
             TableOperation tableOperation = TableOperation.Insert(newItem);

@@ -11,7 +11,7 @@ namespace GuestBookWebRole
 {
     public partial class _Default : Page
     {
-        private readonly string containerName = "guestbookpicsblob" + Guid.NewGuid();
+        private readonly string containerName = "guestbookpicsblob";
 
         private static bool _isStorageInitialized = false;
         private static object _lock = new object();
@@ -41,7 +41,7 @@ namespace GuestBookWebRole
             if (FileUpload1.HasFile)
             {
                 InitializeStorage();
-                
+
                 string uniqueBlobName = string.Format("image_{0}{1}", Guid.NewGuid().ToString(), Path.GetExtension(FileUpload1.FileName));
 
                 BlobClient blob = _blobContainerClient.GetBlobClient(uniqueBlobName);
@@ -65,7 +65,7 @@ namespace GuestBookWebRole
                 // Add message to image processing queue
                 if (_queueClient.Exists())
                 {
-                    var message = string.Format("{0},{1},{2}", blob.Uri.ToString(), entry.PartitionKey, entry.RowKey);
+                    var message = uniqueBlobName;
                     _queueClient.SendMessage(message);
                     System.Diagnostics.Trace.TraceInformation("Sent message to process blob '{0}'", uniqueBlobName);
                 }
