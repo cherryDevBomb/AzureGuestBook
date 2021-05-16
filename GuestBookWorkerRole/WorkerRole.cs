@@ -5,7 +5,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Net;
 using System.Threading;
-using System.Threading.Tasks;
 using GuestBookData;
 using Microsoft.WindowsAzure.ServiceRuntime;
 using Azure.Storage.Queues;
@@ -177,16 +176,6 @@ namespace GuestBookWorkerRole
             base.OnStop();
 
             Trace.TraceInformation("GuestBookWorkerRole has stopped");
-        }
-
-        private async Task RunAsync(CancellationToken cancellationToken)
-        {
-            // TODO: Replace the following with your own logic.
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                Trace.TraceInformation("Working");
-                await Task.Delay(1000);
-            }
         }
     }
 }

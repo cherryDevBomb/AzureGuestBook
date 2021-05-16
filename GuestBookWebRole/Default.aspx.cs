@@ -3,7 +3,6 @@ using Azure.Storage.Blobs.Models;
 using Azure.Storage.Queues;
 using GuestBookData;
 using System;
-using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Web.UI;
@@ -22,10 +21,12 @@ namespace GuestBookWebRole
         private static QueueClient _queueClient;
         private static GuestBookDataSource ds = new GuestBookDataSource();
 
-        protected override void OnInit(EventArgs e)
+        protected void Page_Load(object sender, EventArgs e)
         {
-            DataList1.DataSource = ds.GetGuestBookEntries();
-            DataList1.DataBind();
+            if (!Page.IsPostBack)
+            {
+                Timer1.Enabled = true;
+            }
         }
 
         // https://github.com/Azure-Samples/azure-sdk-for-net-storage-blob-upload-download/blob/master/v12/Program.cs
@@ -65,21 +66,15 @@ namespace GuestBookWebRole
                 }
             }
 
-            NameTextBox.Text = "";
-            MessageTextBox.Text = "";
+            NameTextBox.Text = string.Empty;
+            MessageTextBox.Text = string.Empty;
 
-            DataList1.DataSource = ds.GetGuestBookEntries();
-            DataList1.DataBind();
-    
-            Timer1.Enabled = true;            
+            DataList1.DataBind();       
         }
 
         protected void Timer1_Tick(object sender, EventArgs e)
         {
-            DataList1.DataSource = ds.GetGuestBookEntries();
             DataList1.DataBind();
-
-            Timer1.Enabled = false;
         }
 
         private void InitializeStorage()

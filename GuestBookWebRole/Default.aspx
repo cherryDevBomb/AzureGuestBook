@@ -19,7 +19,6 @@
         <asp:ScriptManager ID="ScriptManager1"
             runat="server">
         </asp:ScriptManager>
-        <asp:Timer runat="server" id="Timer1" interval="8000" ontick="Timer1_Tick" Enabled="false" />
 
         <nav class="navbar navbar-light bg-dark rounded-0 pt-1">
             <h2 class="text-light">GuestBook</h2>
@@ -83,10 +82,14 @@
 
             </div>
 
+            <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+            <ContentTemplate>
             <div class="py-5 mt-3">
                 <h3>Comments</h3>
 
                 <asp:DataList ID="DataList1"
+                    runat="server"
+                    DataSourceID="ObjectDataSource1"
                     BorderColor="black"
                     CellPadding="5"
                     CellSpacing="5"
@@ -94,7 +97,6 @@
                     RepeatLayout="Flow"
                     RepeatColumns="0"
                     BorderWidth="0"
-                    runat="server"
                     Style="margin-top: 1em;">
 
                     <ItemTemplate>
@@ -121,7 +123,23 @@
                     </ItemTemplate>
 
                 </asp:DataList>
+                <asp:Timer 
+                    ID="Timer1" 
+                    runat="server"
+                    Interval="15000"
+                    OnTick="Timer1_Tick">
+                </asp:Timer>
+                </ContentTemplate>
+            </asp:UpdatePanel>
             </div>
+            <asp:ObjectDataSource 
+               ID="ObjectDataSource1"
+               runat="server" 
+               DataObjectTypeName="GuestBookData.GuestBookEntry"
+               SelectMethod="GetGuestBookEntries" 
+               TypeName="GuestBookData.GuestBookDataSource">
+            </asp:ObjectDataSource>
+
         </div>
 
         <div class="modal fade" id="imageModal" role="dialog" aria-hidden="true">
