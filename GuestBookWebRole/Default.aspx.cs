@@ -2,9 +2,11 @@
 using Azure.Storage.Blobs.Models;
 using GuestBookData;
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 
 namespace GuestBookWebRole
 {
@@ -122,6 +124,15 @@ namespace GuestBookWebRole
 
                 _isStorageInitialized = true;
             }
+        }
+
+        protected void Image_Click1(object sender, ImageClickEventArgs e)
+        {
+            System.Diagnostics.Trace.TraceInformation("Clicked");
+            ImageButton imageBtn = sender as ImageButton;
+            ImageFull.ImageUrl = imageBtn.Attributes["FullImageUrl"].ToString();
+            ScriptManager.RegisterStartupScript(Page, Page.GetType(), "imageModal", "jQuery.noConflict(); $('#imageModal').modal('show');", true);
+            upModal.Update();
         }
     }
 }

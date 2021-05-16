@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="Content/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="Content/Site.css">
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -39,7 +41,7 @@
                             ID="NameRequiredValidator"
                             runat="server"
                             ControlToValidate="NameTextBox"
-                            Text=".*" />
+                            Text="*" />
                     </div>
                 </div>
 
@@ -93,13 +95,13 @@
                     RepeatColumns="0"
                     BorderWidth="0"
                     runat="server"
-                    style="margin-top:1em;">
+                    Style="margin-top: 1em;">
 
                     <ItemTemplate>
                         <div class="card mw-100">
                             <div class="row">
                                 <div class="col-auto">
-                                    <asp:Image ID="Image" class="card-img-left" ImageUrl='<%# DataBinder.Eval(Container.DataItem, "ThumbnailUrl") %>' runat="server" />
+                                    <asp:ImageButton ID="Image" class="card-img-left" ImageUrl='<%# DataBinder.Eval(Container.DataItem, "ThumbnailUrl") %>' CausesValidation="false" runat="server" FullImageUrl='<%# DataBinder.Eval(Container.DataItem, "PhotoUrl") %>' OnClick="Image_Click1" />
                                 </div>
                                 <div class="col">
                                     <div class="card-block px-2 py-3">
@@ -115,11 +117,31 @@
                                 </div>
                             </div>
                         </div>
+
                     </ItemTemplate>
 
                 </asp:DataList>
             </div>
         </div>
+
+        <div class="modal fade" id="imageModal" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <asp:UpdatePanel ID="upModal" runat="server" ChildrenAsTriggers="false" UpdateMode="Conditional">
+                    <ContentTemplate>
+                        <div class="modal-content">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <div class="modal-body img-modal">
+                                <asp:Image ID="ImageFull" runat="server" />
+                            </div>
+                        </div>
+                    </ContentTemplate>
+                </asp:UpdatePanel>
+            </div>
+        </div>
+
     </form>
+
 </body>
 </html>
