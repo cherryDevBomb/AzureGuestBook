@@ -27,3 +27,18 @@ body {
         padding: 0;
     }
 }
+
+.modal-dialog {
+    max-width: 100% !important;
+    width: unset;
+    -webkit-transform: unset !important;
+    
+}
+
+.modal-content {
+    width: 100%;
+}
+
+.img-modal {
+    overflow: scroll;
+}
