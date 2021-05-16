@@ -26,14 +26,6 @@ namespace GuestBookWebRole
             DataList1.DataBind();
         }
 
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            //if (!Page.IsPostBack)
-            //{
-            //    Timer1.Enabled = true;
-            //}
-        }
-
         // https://github.com/Azure-Samples/azure-sdk-for-net-storage-blob-upload-download/blob/master/v12/Program.cs
         // https://docs.microsoft.com/en-us/azure/storage/queues/storage-dotnet-how-to-use-queues?tabs=dotnet
         public void SignButton_Click(object sender, EventArgs e)
@@ -76,13 +68,17 @@ namespace GuestBookWebRole
 
             DataList1.DataSource = ds.GetGuestBookEntries();
             DataList1.DataBind();
+    
+            Timer1.Enabled = true;            
         }
 
-        //protected void Timer1_Tick(object sender, EventArgs e)
-        //{
-        //    this.DataList1.DataSource = ds.GetGuestBookEntries();
-        //    this.DataList1.DataBind();
-        //}
+        protected void Timer1_Tick(object sender, EventArgs e)
+        {
+            DataList1.DataSource = ds.GetGuestBookEntries();
+            DataList1.DataBind();
+
+            Timer1.Enabled = false;
+        }
 
         private void InitializeStorage()
         {

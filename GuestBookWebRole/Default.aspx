@@ -17,7 +17,7 @@
         <asp:ScriptManager ID="ScriptManager1"
             runat="server">
         </asp:ScriptManager>
-        <%--<asp:Timer runat="server" id="Timer1" interval="500000" ontick="Timer1_Tick" />--%>
+        <asp:Timer runat="server" id="Timer1" interval="8000" ontick="Timer1_Tick" Enabled="false" />
 
         <nav class="navbar navbar-light bg-dark rounded-0 pt-1">
             <h2 class="text-light">GuestBook</h2>
