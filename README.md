@@ -10,7 +10,7 @@ Azure Cloud Service for storing reviews with images.
 ### Built with
 * Azure Worker Role
 * Azure Web Role (ASP.NET WebForm)
-* Azure Blob Storage
+* Azure Blob Storage (Storage Blob SDK v12)
 * Visual Studio 2019 (Azure development + Data storage and processing Workloads)
 * Can be locally tested using Azure Storage Emulator
 
